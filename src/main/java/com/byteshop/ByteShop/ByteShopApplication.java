@@ -1,0 +1,13 @@
+package com.byteshop.ByteShop;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ByteShopApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ByteShopApplication.class, args);
+	}
+
+}
