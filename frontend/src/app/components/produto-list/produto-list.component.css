@@ -1,0 +1,46 @@
+.produto-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 16px;
+}
+
+.produto-item {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 220px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.produto-item:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+.produto-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.produto-item h3 {
+  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.produto-item p {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.produto-item .preco {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 1.05rem;
+}
