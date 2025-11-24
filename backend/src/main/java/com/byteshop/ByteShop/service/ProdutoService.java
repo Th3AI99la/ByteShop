@@ -14,40 +14,72 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    // Operação LISTAR: Retorna todos os produtos.
+    // Operação LISTAR
     public List<Produto> listarTodos() {
         return produtoRepository.findAll();
     }
 
-    // Operação CONSULTAR: Busca um produto pelo seu ID.
+    // Operação CONSULTAR
     public Optional<Produto> buscarPorId(Long id) {
         return produtoRepository.findById(id);
     }
 
-    // Operação INCLUIR: Salva um novo produto no banco.
+    // Operação INCLUIR
     public Produto salvar(Produto produto) {
-        // A ideia futura é adicionar validações aqui, como verificar se o nome do produto já existe :)
+        // --- CORREÇÃO AQUI ---
+        // Antes de salvar, precisamos amarrar o Detalhe ao Produto.
+        if (produto.getDetalhe() != null) {
+            produto.getDetalhe().setProduto(produto); // "Detalhe, este é seu pai"
+        }
+        
+        // Validamos se a categoria veio nula (opcional, mas bom para evitar erros)
+        if (produto.getCategoria() != null && produto.getCategoria().getId() == null) {
+             produto.setCategoria(null); 
+        }
+
         return produtoRepository.save(produto);
     }
 
-    // Operação EXCLUIR: Deleta um produto pelo seu ID.
+    // Operação EXCLUIR
     public void deletar(Long id) {
         produtoRepository.deleteById(id);
     }
 
-    // Operação ALTERAR: Atualiza um produto existente.
+    // Operação ALTERAR
     public Produto atualizar(Long id, Produto produtoAtualizado) {
-        // Verifica se o produto com o ID fornecido existe, se sim, atualiza, se não, lança um erro.
         return produtoRepository.findById(id)
                 .map(produtoExistente -> {
-                    // Se encontramos, atualizamos os dados com as informações recebidas.
+                    // Atualiza dados básicos
                     produtoExistente.setNome(produtoAtualizado.getNome());
                     produtoExistente.setPreco(produtoAtualizado.getPreco());
                     produtoExistente.setQuantidadeEstoque(produtoAtualizado.getQuantidadeEstoque());
                     produtoExistente.setDisponivel(produtoAtualizado.isDisponivel());
                     produtoExistente.setDataCadastro(produtoAtualizado.getDataCadastro());
-                    // Salvamos o produto com as alterações.
+                    
+                    // --- ATUALIZAÇÃO DA CATEGORIA ---
+                    produtoExistente.setCategoria(produtoAtualizado.getCategoria());
+
+                    // --- ATUALIZAÇÃO DO DETALHE ---
+                    if (produtoAtualizado.getDetalhe() != null) {
+                        if (produtoExistente.getDetalhe() == null) {
+                            // Se não tinha detalhe antes, cria um novo
+                            produtoExistente.setDetalhe(produtoAtualizado.getDetalhe());
+                            produtoExistente.getDetalhe().setProduto(produtoExistente);
+                        } else {
+                            // Se já tinha, apenas atualiza os campos (para manter o mesmo ID)
+                            produtoExistente.getDetalhe().setEspecificacaoTecnica(
+                                produtoAtualizado.getDetalhe().getEspecificacaoTecnica()
+                            );
+                            produtoExistente.getDetalhe().setGarantiaMeses(
+                                produtoAtualizado.getDetalhe().getGarantiaMeses()
+                            );
+                        }
+                    } else {
+                        // Se o detalhe foi removido, zera a referência
+                        
+                    }
+
                     return produtoRepository.save(produtoExistente);
-                }).orElseThrow(() -> new RuntimeException("Produto não encontrado com o id: " + id)); // Lançamos um erro se o produto não existe.
+                }).orElseThrow(() -> new RuntimeException("Produto não encontrado com o id: " + id));
     }
 }
