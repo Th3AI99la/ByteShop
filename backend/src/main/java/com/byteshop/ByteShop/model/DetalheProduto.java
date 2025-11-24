@@ -21,8 +21,7 @@ public class DetalheProduto {
     private int garantiaMeses;
 
     @OneToOne
-    //Coluna que referencia a chave primária da tabela Produto
-    @JoinColumn(name = "produto_id") 
-    @JsonIgnore 
+    @JoinColumn(name = "produto_id")
+    @JsonIgnore
     private Produto produto;
 }

@@ -2,8 +2,10 @@ package com.byteshop.ByteShop.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GeneratedValue; 
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -18,8 +20,8 @@ public class Categoria {
 
     private String nome;
 
-    // Uma categoria tem MUITOS produtos
-    // 'mappedBy' indica que o dono da relação é o campo 'categoria' lá na classe Produto
-    @OneToMany(mappedBy = "categoria") 
+    // Relação OneToMany com Produto
+    @OneToMany(mappedBy = "categoria")
+    @JsonIgnore 
     private List<Produto> produtos;
 }
