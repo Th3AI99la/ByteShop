@@ -1,20 +1,38 @@
-<div class="container">
+<div class="container form-container">
   <h2>{{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}</h2>
 
   <form (ngSubmit)="salvar()">
+
+    <h4 class="mb-3 text-muted">Dados Gerais</h4>
+
     <div class="form-group">
       <label for="nome">Nome do Produto</label>
       <input type="text" class="form-control" id="nome" [(ngModel)]="produto.nome" name="nome" required>
     </div>
 
     <div class="form-group">
-      <label for="preco">Preço</label>
-      <input type="number" class="form-control" id="preco" [(ngModel)]="produto.preco" name="preco" required>
+      <label for="categoria">Categoria</label>
+      <select class="form-control" id="categoria" name="categoria" [(ngModel)]="produto.categoria" [compareWith]="compararCategorias">
+        <option [ngValue]="undefined">Selecione uma categoria...</option>
+        <option *ngFor="let cat of categorias" [ngValue]="cat">
+          {{ cat.nome }}
+        </option>
+      </select>
     </div>
 
-    <div class="form-group">
-      <label for="quantidadeEstoque">Quantidade em Estoque</label>
-      <input type="number" class="form-control" id="quantidadeEstoque" [(ngModel)]="produto.quantidadeEstoque" name="quantidadeEstoque" required>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="preco">Preço</label>
+          <input type="number" class="form-control" id="preco" [(ngModel)]="produto.preco" name="preco" required>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="quantidadeEstoque">Estoque</label>
+          <input type="number" class="form-control" id="quantidadeEstoque" [(ngModel)]="produto.quantidadeEstoque" name="quantidadeEstoque" required>
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -22,12 +40,32 @@
       <input type="date" class="form-control" id="dataCadastro" [(ngModel)]="produto.dataCadastro" name="dataCadastro" required>
     </div>
 
-    <div class="form-check mb-3">
+    <div class="form-check mb-4">
       <input type="checkbox" class="form-check-input" id="disponivel" [(ngModel)]="produto.disponivel" name="disponivel">
       <label class="form-check-label" for="disponivel">Disponível</label>
     </div>
 
-    <button type="submit" class="btn btn-success">Salvar</button>
-    <button type="button" class="btn btn-secondary ml-2" (click)="cancelar()">Cancelar</button>
+    <hr>
+
+    <div *ngIf="produto.detalhe">
+        <h4 class="mb-3 text-muted">Ficha Técnica</h4>
+
+        <div class="form-group">
+            <label for="especificacao">Especificação Técnica</label>
+            <textarea class="form-control" id="especificacao" rows="3"
+                      [(ngModel)]="produto.detalhe.especificacaoTecnica" name="especificacao"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="garantia">Garantia (Meses)</label>
+            <input type="number" class="form-control" id="garantia"
+                   [(ngModel)]="produto.detalhe.garantiaMeses" name="garantia">
+        </div>
+    </div>
+
+    <div class="button-group mt-4">
+      <button type="submit" class="btn btn-success">Salvar</button>
+      <button type="button" class="btn btn-secondary ml-2" (click)="cancelar()">Cancelar</button>
+    </div>
   </form>
 </div>
