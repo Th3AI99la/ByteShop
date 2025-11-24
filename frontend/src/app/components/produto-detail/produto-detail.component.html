@@ -1,0 +1,77 @@
+<div class="container detail-container" *ngIf="produto; else loading">
+
+  <header class="detail-header">
+    <div class="header-content">
+      <h1>{{ produto.nome }}</h1>
+      <span class="badge" [ngClass]="produto.disponivel ? 'badge-success' : 'badge-danger'">
+        {{ produto.disponivel ? 'Disponível em Estoque' : 'Indisponível' }}
+      </span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-secondary" (click)="voltar()">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </button>
+      <button class="btn btn-primary" [routerLink]="['/produtos/editar', produto.id]">
+        <i class="fas fa-edit"></i> Editar
+      </button>
+    </div>
+  </header>
+
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card info-card shadow-sm">
+        <div class="card-body text-center">
+          <div class="price-tag">
+            <small>Preço Atual</small>
+            <h3>{{ produto.preco | currency:'BRL' }}</h3>
+          </div>
+          <hr>
+          <ul class="list-unstyled text-left">
+            <li><strong>ID:</strong> #{{ produto.id }}</li>
+            <li><strong>Categoria:</strong> {{ produto.categoria?.nome || 'Sem Categoria' }}</li>
+            <li><strong>Estoque:</strong> {{ produto.quantidadeEstoque }} unidades</li>
+            <li><strong>Cadastro:</strong> {{ produto.dataCadastro | date:'dd/MM/yyyy' }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card detail-card shadow-sm">
+        <div class="card-header bg-white border-bottom-0">
+          <h5 class="mb-0 text-muted"><i class="fas fa-cogs"></i> Especificações Técnicas</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="produto.detalhe; else semDetalhes">
+            <div class="spec-item">
+              <label>Descrição Técnica</label>
+              <p class="text-justify">{{ produto.detalhe.especificacaoTecnica }}</p>
+            </div>
+
+            <div class="spec-item mt-4">
+              <label>Garantia do Fabricante</label>
+              <p class="highlight-text">{{ produto.detalhe.garantiaMeses }} Meses</p>
+            </div>
+          </div>
+
+          <ng-template #semDetalhes>
+            <div class="alert alert-light text-center" role="alert">
+              Nenhuma especificação técnica cadastrada para este produto.
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Buscando informações do produto...</p>
+  </div>
+</ng-template>

@@ -1,31 +1,81 @@
 <div class="container">
-  <h1>Lista de Produtos</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h1>Lista de Produtos</h1>
+    <button class="btn btn-success font-weight-bold" routerLink="/produtos/novo">
+      <i class="fas fa-plus-circle"></i> Novo Produto
+    </button>
+  </div>
 
-  <button class="btn btn-primary mb-3" routerLink="/produtos/novo">Novo Produto</button>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered shadow-sm bg-white">
+      <thead class="thead-dark">
+        <tr>
+          <th style="width: 5%" class="text-center">ID</th>
+          <th>Nome</th>
+          <th style="width: 15%">Preço</th>
+          <th style="width: 10%" class="text-center">Estoque</th>
+          <th style="width: 10%" class="text-center">Status</th>
+          <th style="width: 28%" class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let produto of produtos">
+          <td class="text-center align-middle">{{ produto.id }}</td>
+          <td class="align-middle">
+            <span class="font-weight-bold text-dark">{{ produto.nome }}</span>
+            <br>
+            <small class="text-muted" *ngIf="produto.categoria">
+              <i class="fas fa-tag"></i> {{ produto.categoria.nome }}
+            </small>
+          </td>
 
-  <table class="table table-striped table-bordered">
-    <thead class="thead-dark">
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Preço</th>
-        <th>Estoque</th>
-        <th>Disponível</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let produto of produtos">
-        <td>{{ produto.id }}</td>
-        <td>{{ produto.nome }}</td>
-        <td>{{ produto.preco | currency:'BRL' }}</td>
-        <td>{{ produto.quantidadeEstoque }}</td>
-        <td>{{ produto.disponivel ? 'Sim' : 'Não' }}</td>
-        <td>
-          <button class="btn btn-sm btn-info" [routerLink]="['/produtos/editar', produto.id]">Editar</button>
-          <button class="btn btn-sm btn-danger ml-2" (click)="excluir(produto.id)">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td class="price-cell text-right align-middle">
+            {{ produto.preco | currency:'BRL':'symbol':'1.2-2':'pt' }}
+          </td>
+
+          <td class="text-center align-middle">
+            <span class="badge badge-pill badge-light border">{{ produto.quantidadeEstoque }} un.</span>
+          </td>
+
+          <td class="text-center align-middle">
+            <span *ngIf="produto.disponivel" class="badge badge-success p-2">
+              <i class="fas fa-check"></i> Ativo
+            </span>
+            <span *ngIf="!produto.disponivel" class="badge badge-danger p-2">
+              <i class="fas fa-times"></i> Inativo
+            </span>
+          </td>
+
+          <td class="text-center align-middle">
+            <button class="btn btn-sm btn-outline-primary mr-2"
+                    [routerLink]="['/produtos/detalhe', produto.id]"
+                    title="Ver Detalhes">
+              <i class="fas fa-eye"></i> Detalhes
+            </button>
+
+            <button class="btn btn-sm btn-info mr-2 text-white"
+                    [routerLink]="['/produtos/editar', produto.id]"
+                    title="Editar">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+
+            <button class="btn btn-sm btn-danger"
+                    (click)="excluir(produto.id)"
+                    title="Excluir">
+              <i class="fas fa-trash-alt"></i> Excluir
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="produtos.length === 0" class="text-center mt-5 p-5 bg-light rounded border">
+    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">Nenhum produto encontrado</h4>
+    <p class="mb-4">Comece cadastrando o primeiro item do seu estoque.</p>
+    <button class="btn btn-primary" routerLink="/produtos/novo">
+      Cadastrar Agora
+    </button>
+  </div>
 </div>
